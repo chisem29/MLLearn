@@ -2,11 +2,10 @@ import pandas as pd
 
 #создание списка типа int[]
 
-dt = pd.DataFrame({"A" : [1, 2, 3], "B" : [1, 2, 3]}, index=["row1", "row2"])
-
-print(dt[dt["A"]>2])
+dt = pd.DataFrame({"A" : [1, 2, 3, 2], "B" : [1, 4, 2, 3]}, columns=["A", "B"], index=["1", "2", "3", "4"])
+print(dt.sort_values(by="A"))
 #DArrow
-
+pd.Series().to_st
 #TimeStamp
  
 #с помощью timestamp мы можем в опр. формате получить заданную дату
