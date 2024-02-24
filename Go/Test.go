@@ -25,8 +25,7 @@ type MethodsOfHuman interface {
 }
 
 type MethodsOfHomo interface {
-	SayWant() string
-	SayHello() string
+	MethodsOfHuman
 	SayLesbiGay() string
 }
 
@@ -68,8 +67,15 @@ func main() {
 
 	fmt.Println(massive[0:1], len(massive2), cap(massive2))
 
-	typeIntR := 1
+	var typeIntR any = 1
+	
 	fmt.Println(reflect.TypeOf(typeIntR)) //получения типа с помощью метода модуля reflect
+
+	iTypeInt, okT := typeIntR.(int) 
+
+	if (okT) {
+		fmt.Println("Ok, this is", iTypeInt)
+	}
 
 	switch typeIntR {
 	case 1 : // выполнится
@@ -128,6 +134,8 @@ func main() {
 		fmt.Println("GO2->Свежие единичные данные приняты.", msg2)
 	}
 
+	close(c1) // зыкрытие канала означает досрочный запрет на записывание данных
+
 	Metka: // обьявляем метку
 		for i := 0; i < 10; i++ {
 			if (i == 5) {
@@ -151,7 +159,7 @@ func main() {
 	fmt.Println("Побитовая операция сложения 100 и 10 : ", bitSum)
 
 	skibidiWoman := Human{"Huesosovna", true, false}
-	man := Human{"Tinker", true, false}
+	man := Human{"Tinker", true, true}
 	gayHuman := Homo{man, true} // наследует все implements TYPE Human (включая методы)
 	
 	fmt.Printf("I`am %v and my status of alive : %s \n", skibidiWoman.Name, skibidiWoman.Alive)
@@ -162,5 +170,15 @@ func main() {
 
 	interfaceHomo := MethodsOfHomo(gayHuman) // поддерживается следующая вариация записи
 
+	people := [3]MethodsOfHuman{
+		man, gayHuman, skibidiWoman,
+	}
+	
+	for _, v := range people {
+		fmt.Println(v.SayWant())
+	}
+
 	fmt.Println(interfaceHomo.SayHello(), interfaceHomo.SayLesbiGay())
+
+	
 }
