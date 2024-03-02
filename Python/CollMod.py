@@ -55,3 +55,5 @@ class MyString(collections.UserString) :
 myStr = MyString("Sel")
 myStr.append("in")
 print(myStr.data)
+
+#конец
