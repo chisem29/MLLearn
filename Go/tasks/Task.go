@@ -1,64 +1,130 @@
 package main
 
 import (
-    "os"
-    "strings"
-    "time"
-    "fmt"
+	"fmt"
+	"os"
+	"sync"
+	"sync/atomic"
+	"time"
 )
 
-type Queue struct {
-    Q []int
+type Point struct {
+	x int
+	y int
 }
 
-func (this Queue) Empty() bool {
-    return len(this.Q) == 0
+type exteremes struct {
+	top    int
+	bottom int
+	left   int
+	right  int
 }
 
-func ExtractLog(inputFileName string, start, end time.Time) ([]string, error) {
-    data, err := os.ReadFile(inputFileName)
-    if err != nil {
-        return nil, err
-    }
+type Shape struct {
+	points map[Point]bool
+	e      exteremes
+}
 
-    lines := strings.Split(string(data), "\n")
+func (shape *Shape) contains(x, y int) bool {
+	_, ok := shape.points[Point{x, y}]
+	return ok
+}
 
-    filteredLines := make([]string, 0)
+func (shape *Shape) exteremes() exteremes {
+	return shape.e
+}
 
-    for _, line := range lines {
-        parts := strings.Split(line, " ")
+func (shape *Shape) isRect() bool {
+	e := shape.exteremes()
+	for y := e.top; y <= e.bottom; y++ {
+		for x := e.left; x <= e.right; x++ {
+			if !shape.contains(x, y) {
+				return false
+			}
+		}
+	}
+	return true
+}
 
-        if len(parts) != 2 {
-            continue
-        }
-        t, err := time.Parse("02.01.2006", parts[0])
-        if err != nil {
-            continue
-        }
-        if t.After(start.Add(-24 * 1)) && t.Before(end.Add(24*1)) {
-            filteredLines = append(filteredLines, line)
-        }
-    }
-    if len(filteredLines) == 0 {
-        return nil, err
-    }
+func addPoint(shape *Shape, field [][]byte, x int, y int) {
+	if x < 0 {
+		return
+	}
+	if x >= len(field[0]) {
+		return
+	}
+	if y < 0 {
+		return
+	}
+	if y >= len(field) {
+		return
+	}
+	if field[y][x] != 35 {
+		return
+	}
 
-    return filteredLines, nil
+	shape.points[Point{x, y}] = true
+	e := &shape.e
+	if x > e.right {
+		e.right = x
+	}
+	if x < e.left {
+		e.left = x
+	}
+	if y > e.bottom {
+		e.bottom = y
+	}
+	if y < e.top {
+		e.top = y
+	}
+	field[y][x] = 0
+	addPoint(shape, field, x-1, y)
+	addPoint(shape, field, x, y-1)
+	addPoint(shape, field, x+1, y)
+	addPoint(shape, field, x, y+1)
+}
+
+func getShape(field [][]byte, x int, y int) Shape {
+	shape := Shape{make(map[Point]bool, 0), exteremes{100000, -1, 1000000, -1}}
+	addPoint(&shape, field, x, y)
+	return shape
+}
+
+func getShapes(field [][]byte) []Shape {
+	shapes := make([]Shape, 0)
+	for y, row := range field {
+		for x, cell := range row {
+			if cell == 35 {
+				shapes = append(shapes, getShape(field, x, y))
+			}
+		}
+	}
+	return shapes
 }
 
 func main() {
-
-    ss := []int{1, 2, 3}
-    q := {ss}
-
-    start, err := time.Parse("02.01.2006", "19.12.2022")
-    if err != nil {
-        panic(err)
-    }
-    end, err := time.Parse("02.01.2006", "20.12.2022")
-    if err != nil {
-        panic(err)
-    }
-
-    fmt.Println(ExtractLog("C:/Users/celin/MLLearn/Go/tasks/t.txt", start, end))
+	var n int
+	var m int
+	start := time.Now()
+	fmt.Scanf("%d %d\n", &n, &m)
+	field := make([][]byte, n)
+	for i := 0; i < n; i++ {
+		fmt.Scanln(&field[i])
+	}
+	shapes := getShapes(field)
+	var count int64 = 0
+	var wg sync.WaitGroup
+	for _, sh := range shapes {
+		wg.Add(1)
+		go func(sh Shape) {
+			defer wg.Done()
+			if sh.isRect() {
+				atomic.AddInt64(&count, 1)
+			}
+		}(sh)
+	}
+	wg.Wait()
+	fmt.Println(count)
+	end := time.Now()
+	fmt.Fprintf(os.Stderr, "%v\n", end.Sub(start))
 }

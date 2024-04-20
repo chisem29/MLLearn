@@ -1,12 +1,12 @@
 import pandas as pd
 import numpy as np
-
-#создание списка типа int[]
-
-#DArrow
+import matplotlib.pyplot as plt
+import functionsActive.BinaryStep as bs
 
 #TimeStamp
- 
+
+d = pd.read_excel("./xlsx/Test1.xlsx")
+d.plot()
 #с помощью timestamp мы можем в опр. формате получить заданную дату
 
 print(pd.Timestamp(year=2023, month=11, day=29, hour=20, minute=52).timetuple()) 
@@ -29,6 +29,19 @@ nn = np.array([1, 2, 3, 4, 5])
 
 nn *= 2
 
+print(np.linspace(0.1, 4, 9))
+
 print(np.array([nn for i in range(3)]).trace()) # сумаа диагонали
 
-print([1,2,3, 0, 0, 0][:3]+[2, 5, 6][:3])
+print(np.shape([[nn for i in range(3)] for y in range(2)]))
+
+print(np.exp([1.0, 2.0, 3.0])/sum(np.exp([1.0, 2.0, 3.0]))) # HOW????????????????? IT IS SOFTMAX
+
+df = pd.DataFrame({
+    14 : [bs.binaryStep(i) for i in np.arange(-1000, 1001)],
+    88 : [1 if (i == -1000) else 0 if (i == 1000) else 0.5 for i in np.arange(-1000, 1001)],
+    19 : [1 if not bs.binaryStep(i) else 0 for i in np.arange(-1000, 1001)],
+    39 : [0 if (i == -1000) else 1 if (i == 1000) else 0.5 for i in np.arange(-1000, 1001)]
+}) # Graphic Pashalko shhhhh!!!!
+
+plt.show()
