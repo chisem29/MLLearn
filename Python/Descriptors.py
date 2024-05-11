@@ -1,5 +1,6 @@
 from typing import Any
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from collections import namedtuple
 
 class TypingText :
 
@@ -71,5 +72,35 @@ class Film :
     actors:list[Actor]
     year:int
 
-opengaymer = Film(title='Opengaymer', actors=[Actor(name=name, age=age, country=country) for name, age, country in [["Bob", 21, 'US'], ["Pidor", 43, 'US'], ['Jack', 19, 'US']]], year=2023)
+opengaymer = Film(
+    title='Opengaymer', 
+    actors=[
+        Actor(name=name, age=age, country=country) 
+        for name, age, country in [["Bob", 21, 'US'], ["Pidor", 43, 'US'], ['Jack', 19, 'US']]
+    ], 
+    year=2023
+)
+
 print(opengaymer.actors)
+
+Book = namedtuple('Book', ['title', 'author'])
+
+MathBook = Book(title='Math', author='Sigma')
+
+class Cat :
+    c = 0
+    def __init__(self) -> None:
+        Cat.c = Cat.c+1
+    
+    @classmethod
+    def count(cls) :
+        print(cls.c)
+        
+    @staticmethod
+    def who() :
+        return 'I am cat'
+    
+for i in range(4) :
+    Cat()
+    
+Cat.count()

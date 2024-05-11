@@ -8,6 +8,6 @@ print(statistics.median(data))
 
 print(statistics.harmonic_mean(data))
 
-print(statistics.geometric_mean(data))
+print(statistics.geometric_mean_ц(data))
 
 print(statistics.multimode(data))
