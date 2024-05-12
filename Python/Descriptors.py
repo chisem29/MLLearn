@@ -8,19 +8,19 @@ class TypingText :
         self.attr_name = f'_{attr_name}'
         self.l = [] """
     
-    def __set_name__(self, owner, name : str) -> None : # WELL WELL WELL
+    def __set_name__(self, owner : Any, name : str) -> None : # WELL WELL WELL
         self.attr_name = f'_{name}'
         self.l = []
         print(name, owner)
 
-    def __get__(self, intance, owner=None) -> Any : # срабатывает при вызове класса
+    def __get__(self, intance : Any, owner=None) -> Any : # срабатывает при вызове класса
         return getattr(intance, self.attr_name)
     
-    def __set__(self, intance, value : Any) -> None : # срабатывает при изменении 
+    def __set__(self, intance : Any, value : Any) -> None : # срабатывает при изменении 
         self.l.append(value)
         setattr(intance, self.attr_name, self.l)
         
-    def __delete__(self, intance) -> None : # срабатывает при удалении класса
+    def __delete__(self, intance : Any) -> None : # срабатывает при удалении класса
         self.l = []
         delattr(intance, self.attr_name)
 
@@ -42,7 +42,7 @@ class Obj :
     def surname(self) :
         return self._surname
     @surname.setter
-    def surname(self, value) :
+    def surname(self, value : Any) :
         self._surname = f'{value} Jopa'
     @surname.getter
     def surname(self) :
@@ -56,11 +56,11 @@ person.surname = 'Banditov'
 print(person.surname)
 
 try :
-    person.loc = 'Mexixco'
+    person.loc = 'Mexico'
 except AttributeError :
     print('Нельзя создать т.к заданы ограничения у атрибутов с помощью __slots__!!!!')
 
-@dataclass
+@dataclass(frozen=True)
 class Actor :
     name:str
     age:int
