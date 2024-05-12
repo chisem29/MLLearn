@@ -43,7 +43,7 @@ russiaPatchPie = patches[2]
 russiaPatchPie.set_edgecolor('black')
 
 ax4 = ac2[1]
-ax4.bar(xs, xy, color='#9370DB')
+ax4.bar(xs, sorted(xy), color='#9370DB')
 ax4.set_ylabel('Income, 1000$.')
 ax4.set_xlabel('Persons')
 ax4.set_title('≥ AVERAGE INCOME IN ORDER') 
