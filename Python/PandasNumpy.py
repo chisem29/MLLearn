@@ -1,10 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from numpy import mean, array
+from numpy import mean
 
 ## https://habr.com/ru/articles/468295/
 ## WRITE SOLUTIONS 15 TASKS!!! 
-
 
 df = pd.read_excel('./xlsx/Persons.xlsx')
 
@@ -17,8 +16,6 @@ mx = df.groupby(["country"])["income"].max().reset_index()
 incomes = avg['income'].round() // 1000
 maxIncomes = mx['income'].round().tolist()
 countries = avg["country"].tolist()
-
-needs = df.loc[df.income >= mean(xy)].sort_values(by=["income"])
 
 fig, (ac1, ac2) = plt.subplots(2, 2, figsize=(9, 7))
 
@@ -46,13 +43,16 @@ russiaPatchPie = patches[2]
 russiaPatchPie.set_edgecolor('black')
 
 ax4 = ac2[1]
-ax4.plot([i for i in range(len(needs))], needs.income // 1000, '#9370DB', )
+ax4.bar(xs, xy, color='#9370DB')
 ax4.set_ylabel('Income, 1000$.')
+ax4.set_xlabel('Persons')
 ax4.set_title('≥ AVERAGE INCOME IN ORDER') 
+ax4.set_ylim(mean(xy), max(xy)+0.01*mean(xy))
 
 for a in [ax1, ax2, ax4] :
     a.grid(alpha=0.5)
     a.set_axisbelow(True)
+
 fig.suptitle('INCOME OF 2024 YEAR')
 
 plt.subplots_adjust(hspace=0.3)
