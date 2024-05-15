@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from numpy import mean
+from numpy import mean, random, corrcoef
+from matplotlib.patches import Circle
 
 ## https://habr.com/ru/articles/468295/
 ## WRITE SOLUTIONS 15 TASKS!!! 
@@ -49,11 +50,29 @@ ax4.set_xlabel('Persons')
 ax4.set_title('≥ AVERAGE INCOME IN ORDER') 
 ax4.set_ylim(mean(xy), max(xy)+0.01*mean(xy))
 
+ax4.add_patch(Circle(xy=(80, 60), radius=10, facecolor='r', alpha=0.5))
+
+fig.legend()
+
 for a in [ax1, ax2, ax4] :
     a.grid(alpha=0.5)
     a.set_axisbelow(True)
 
 fig.suptitle('INCOME OF 2024 YEAR')
 
+new_fig = plt.figure(figsize=(7, 7))
+
+ax = new_fig.add_subplot()
+data = corrcoef(random.rand(10, 10))
+heatmap = ax.imshow(data, cmap="hot", interpolation='nearest')
+
+for i in range(10) :
+    for j in range(10) :
+        ax.annotate(round(data[i][j], 2), xy=(i, j), ha='center', va='center', alpha=0.81)
+
+new_fig.suptitle('Corr Heatmap.', fontsize=20)
+
 plt.subplots_adjust(hspace=0.3)
-plt.show()  
+
+plt.show()   
+
